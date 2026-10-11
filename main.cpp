@@ -58,10 +58,6 @@ int main()
             return 1;
         }
     }
-
-    std::cout << "Nombre de matchs : " << data.size() << std::endl;
-    std::cout << "Nombre de resultats : " << awnser.size() << std::endl;
-
     // Creation du reseau neuronal
     neuralNetwork nn(data, awnser, 16, 1);
 
@@ -70,14 +66,93 @@ int main()
     // load du modele
     nn.load("neuralNetwork");
     // test du modele
+    string homeTeamName;
+    // home goal scored
+    double hGs;
+    // home goal conceded
+    double hGc;
+    // home points
+    double hP;
+    //
+    // For the away team
+    //
+    string awayTeamName;
+    // away goal sclored
+    double aGs;
+    // away goal conceded
+    double aGc;
+    // away points
+    double aP;
+
+    // afichage terminal car j ai la fleme de faire autre chose
+    cout << "     ____  _____  _____  ____    ____    __    __    __      ____  ____  ____  ____  ____  ___  ____  _____  ____ \n"
+            "    ( ___)(  _  )(  _  )(_  _)  (  _ \\  /__\\  (  )  (  )    (  _ \\(  _ \\( ___)(  _ \\(_  _)/ __)(_  _)(  _  )(  _ \\\n"
+            "     )__)  )(_)(  )(_)(   )(     ) _ < /(__)\\  )(__  )(__    )___/ )   / )__)  )(_) )_)(_( (__   )(   )(_)(  )   /\n"
+            "    (__)  (_____)(_____) (__)   (____/(__)(__)(____)(____)  (__)  (_)\\_)(____)(____/(____)\\___) (__) (_____)(_)\n";
+    cout << endl
+         << endl;
+    // Lit un nom d'equipe, meme s'il contient des espaces
+    cout << "Ecrivez le nom de la premiere equipe\n/";
+    getline(cin, homeTeamName);
+
+    cout << "Ecrivez la moyenne de goals marques par "
+         << homeTeamName << " sur les 5 derniers matchs\n/";
+    cin >> hGs;
+
+    cout << "Ecrivez la moyenne de goals concedés par "
+         << homeTeamName << " sur les 5 derniers matchs\n/";
+    cin >> hGc;
+
+    cout << "Ecrivez les points obtenus par "
+         << homeTeamName << " sur les 5 derniers matchs\n/";
+    cin >> hP;
+
+    // Nettoie le retour a la ligne apres les nombres
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "Ecrivez le nom de la deuxieme equipe\n/";
+    getline(cin, awayTeamName);
+
+    cout << "Ecrivez la moyenne de goals marques par "
+         << awayTeamName << " sur les 5 derniers matchs\n/";
+    cin >> aGs;
+
+    cout << "Ecrivez la moyenne de goals concedés par "
+         << awayTeamName << " sur les 5 derniers matchs\n/";
+    cin >> aGc;
+
+    cout << "Ecrivez les points obtenus par "
+         << awayTeamName << " sur les 5 derniers matchs\n/";
+    cin >> aP;
+    //
+    //
+    //
+    hGs = nn.norm(hGs / 5, 5);
+    hGc = nn.norm(hGc / 5, 5);
+    hP = nn.norm(hP, 5);
+
+    // maintenant pour away
+    aGs = nn.norm(aGs / 5, 5);
+    aGc = nn.norm(aGc / 5, 5);
+    aP = nn.norm(aP, 5);
+
     vector<double> predictionTestMatch = {
-        0.44, 0.12, 1, 0.28, 0.20, 0.53};
+        hGs, hGc, hP, aGs, aGc, aP};
 
     double prediction = nn.predict(predictionTestMatch);
 
-    cout << nn.round(prediction) << endl;
+    if (nn.round(nn.round(prediction)) == 1)
+    {
+        cout << "le modele predit la victoire de " << homeTeamName << " a " << prediction * 100 << " %";
+    }
+    else
+    {
+
+        cout << "le modele predit la victoire de " << awayTeamName << " a " << prediction * 100 << " %";
+    };
     cout << prediction * 100;
     // save the model
     // nn.save("neuralNetwork");
+    cin >> aP;
     return 0;
 }
