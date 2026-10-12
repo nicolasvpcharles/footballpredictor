@@ -59,7 +59,7 @@ int main()
         }
     }
     // Creation du reseau neuronal
-    neuralNetwork nn(data, awnser, 16, 1);
+    neuralNetwork nn(data, awnser, 32, 1);
 
     // Entrainement du modele
     // nn.train(10000);
@@ -85,14 +85,15 @@ int main()
     double aP;
 
     // afichage terminal car j ai la fleme de faire autre chose
-    cout << "     ____  _____  _____  ____    ____    __    __    __      ____  ____  ____  ____  ____  ___  ____  _____  ____ \n"
+    cout << "\033[31m     ____  _____  _____  ____    ____    __    __    __      ____  ____  ____  ____  ____  ___  ____  _____  ____ \n"
             "    ( ___)(  _  )(  _  )(_  _)  (  _ \\  /__\\  (  )  (  )    (  _ \\(  _ \\( ___)(  _ \\(_  _)/ __)(_  _)(  _  )(  _ \\\n"
             "     )__)  )(_)(  )(_)(   )(     ) _ < /(__)\\  )(__  )(__    )___/ )   / )__)  )(_) )_)(_( (__   )(   )(_)(  )   /\n"
             "    (__)  (_____)(_____) (__)   (____/(__)(__)(____)(____)  (__)  (_)\\_)(____)(____/(____)\\___) (__) (_____)(_)\n";
     cout << endl
          << endl;
+    cout << "by nicolasvpcharles on github" << endl;
     // Lit un nom d'equipe, meme s'il contient des espaces
-    cout << "Ecrivez le nom de la premiere equipe\n/";
+    cout << "\033[0mEcrivez le nom de la premiere equipe\n/";
     getline(cin, homeTeamName);
 
     cout << "Ecrivez la moyenne de goals marques par "
@@ -148,9 +149,8 @@ int main()
     else
     {
 
-        cout << "le modele predit la victoire de " << awayTeamName << " a " << prediction * 100 << " %";
+        cout << "le modele predit la defete de " << homeTeamName << " a " << 100 - (prediction * 100) << " %";
     };
-    cout << prediction * 100;
     // save the model
     // nn.save("neuralNetwork");
     cin >> aP;
