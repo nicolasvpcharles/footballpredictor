@@ -132,6 +132,23 @@ public:
         return x * (1.0 - x);
     };
 
+    double norm(double value, double maxValue)
+    {
+        return value / maxValue;
+    }
+
+    bool round(double neuralNetworkPrediction)
+    {
+        if (neuralNetworkPrediction >= 0.5)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        };
+    };
+
     //=======================================
     // Fontion d entrainement
     //=======================================
@@ -300,6 +317,7 @@ public:
             }
 
             i = i + 1;
+            cout << i << "/" << eproach << endl;
         }
     };
     //==========================================================
@@ -568,15 +586,35 @@ public:
         return prediction;
     };
 
-    bool round(double neuralNetworkPrediction)
+    double evaluate(
+        vector<vector<double>> trainingDataset,
+        vector<double> trainingResponseDataset)
     {
-        if (neuralNetworkPrediction >= 0.5)
+        if (trainingDataset.empty() ||
+            trainingDataset.size() != trainingResponseDataset.size())
         {
-            return true;
+            cout << "Erreur : dataset invalide." << endl;
+            return 0.0;
         }
-        else
+
+        size_t i = 0;
+        int accuracy = 0;
+
+        while (i < trainingDataset.size())
         {
-            return false;
-        };
-    };
+            double testPrediction = predict(trainingDataset[i]);
+            testPrediction = round(testPrediction);
+
+            if (testPrediction == trainingResponseDataset[i])
+            {
+                accuracy++;
+            }
+
+            i++;
+        }
+
+        return (static_cast<double>(accuracy) /
+                trainingResponseDataset.size()) *
+               100.0;
+    }
 };
