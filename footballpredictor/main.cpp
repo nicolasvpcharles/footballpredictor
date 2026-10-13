@@ -93,49 +93,50 @@ int main()
          << endl;
     cout << "by nicolasvpcharles on github" << endl;
     // Lit un nom d'equipe, meme s'il contient des espaces
-    cout << "\033[0mEcrivez le nom de la premiere equipe\n/";
+    cout << "\033[0mWrite the name of the first team\n/";
     getline(cin, homeTeamName);
 
-    cout << "Ecrivez la moyenne de goals marques par "
-         << homeTeamName << " sur les 5 derniers matchs\n/";
+    cout << "Enter the number of goals scored by "
+         << homeTeamName << " in the last 5 matches\n/";
     cin >> hGs;
 
-    cout << "Ecrivez la moyenne de goals concedés par "
-         << homeTeamName << " sur les 5 derniers matchs\n/";
+    cout << "Enter the number of goals conceded by "
+         << homeTeamName << " in the last 5 matches\n/";
     cin >> hGc;
 
-    cout << "Ecrivez les points obtenus par "
-         << homeTeamName << " sur les 5 derniers matchs\n/";
+    cout << "Enter the points earned by "
+         << homeTeamName << " in the last 5 matches\n/";
     cin >> hP;
 
-    // Nettoie le retour a la ligne apres les nombres
+    // Clear the newline character after the numbers
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-    cout << "Ecrivez le nom de la deuxieme equipe\n/";
+    cout << "Enter the name of the second team\n/";
     getline(cin, awayTeamName);
 
-    cout << "Ecrivez la moyenne de goals marques par "
-         << awayTeamName << " sur les 5 derniers matchs\n/";
+    cout << "Enter the number of goals scored by "
+         << awayTeamName << " in the last 5 matches\n/";
     cin >> aGs;
 
-    cout << "Ecrivez la moyenne de goals concedés par "
-         << awayTeamName << " sur les 5 derniers matchs\n/";
+    cout << "Enter the number of goals conceded by "
+         << awayTeamName << " in the last 5 matches\n/";
     cin >> aGc;
 
-    cout << "Ecrivez les points obtenus par "
-         << awayTeamName << " sur les 5 derniers matchs\n/";
+    cout << "Enter the points earned by "
+         << awayTeamName << " in the last 5 matches\n/";
     cin >> aP;
     //
     //
     //
-    hGs = nn.norm(hGs / 5, 5);
-    hGc = nn.norm(hGc / 5, 5);
-    hP = nn.norm(hP, 5);
+    // il faut que je teste d ene pas normaliser les nombres comme ça peut etre la prediction va etre meilleure
+    //  hGs = nn.norm(hGs / 5, 5);
+    // hGc = nn.norm(hGc / 5, 5);
+    // hP = nn.norm(hP, 5);
 
     // maintenant pour away
-    aGs = nn.norm(aGs / 5, 5);
-    aGc = nn.norm(aGc / 5, 5);
-    aP = nn.norm(aP, 5);
+    // aGs = nn.norm(aGs / 5, 5);
+    // aGc = nn.norm(aGc / 5, 5);
+    //  aP = nn.norm(aP, 5);
 
     vector<double> predictionTestMatch = {
         hGs, hGc, hP, aGs, aGc, aP};
@@ -149,10 +150,18 @@ int main()
     else
     {
 
-        cout << "le modele predit la defete de " << homeTeamName << " a " << 100 - (prediction * 100) << " %";
+        cout << "le modele predit la victoire de " << awayTeamName << " a " << 100 - (prediction * 100) << " %";
     };
     // save the model
     // nn.save("neuralNetwork");
     cin >> aP;
+    cout << "evaluation de la precision du modele";
+    // dataset de matchs je ecris des matchs de fot au hazard qui se passent en live
+    vector<vector<double>> newDataset{{14, 3, 15, 8, 2, 13}, {9, 5, 7, 4, 6, 5}, {4, 6, 4, 7, 10, 4}};
+
+    vector<double> newDatasetResponses{1, 1, 1};
+    double modelEvaluation = nn.evaluate(newDataset, newDatasetResponses);
+    cout << endl
+         << "model evaluation " << modelEvaluation;
     return 0;
 }
