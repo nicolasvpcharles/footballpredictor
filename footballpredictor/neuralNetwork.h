@@ -7,7 +7,6 @@
 #include <cmath>
 #include <random>
 #include <string>
-
 using namespace std;
 
 // for calculating a neural network it is n1 + w1 + b
@@ -617,4 +616,57 @@ public:
                 trainingResponseDataset.size()) *
                100.0;
     }
+    //
+    // ici va etre ecrit une fonction qui va calibrer les eproachs
+    //
+    double trainAndEvaluate(int eproach, vector<vector<double>> dataset, vector<double> result)
+    {
+        train(eproach);
+        double evaluation = evaluate(dataset, result);
+        return evaluation;
+    };
+
+    int calibrateEproact(vector<vector<double>> dataset, vector<double> result, int minEproach = 1000, int maxEproach = 100000, int tries = 10)
+    {
+
+        int calibratedEproach = maxEproach / 2;
+        int a = 0;
+
+        // la fonction va evaluer le modele
+        // il fa fontionner en plusieurs etapes et va utiliser un genre de binary search qui va essayer en un nombres fixe ou variable de fois de entrainer le modele
+        int pastCalibratedEproach = calibratedEproach / 2;
+        double calibratedEproachResult;
+        double pastCalibratedEproachResult;
+        // je fait le premier entrainement sur le coté car comme ça on entraine pas le meme modele 2 fois
+
+        cout << "Debut de la calibration" << endl;
+
+        calibratedEproachResult = trainAndEvaluate(calibratedEproach, dataset, result);
+        pastCalibratedEproachResult = trainAndEvaluate(pastCalibratedEproach, dataset, result);
+        while (a != tries)
+        {
+            // maintenant que j ai reussi a faire les 2 thread je dois apres faire pour que si c est le past qui gagne je utilise le past comme calibrated sinon on multiplie calibrated par 2
+            // verifier lequel est meilleur en accuracy
+            if (calibratedEproachResult > pastCalibratedEproachResult)
+            {
+                // si le nombre les plus grand a une eilleur accuracy on doit allors mettre le calibrated result comme pas calibrate dresult et faire une petite augmentation de une moitié
+                // et alors on entraine le nouveau calibratedresult
+                pastCalibratedEproach = calibratedEproach;
+                calibratedEproach = pastCalibratedEproach * 1.5;
+
+                trainAndEvaluate(calibratedEproach, dataset, result);
+            }
+            else
+            {
+
+                // alors ici on fait l inverse
+                pastCalibratedEproach = calibratedEproach;
+                calibratedEproach = (calibratedEproach + pastCalibratedEproach) / 2;
+                trainAndEvaluate(pastCalibratedEproach, dataset, result);
+            };
+            a = a + 1;
+        };
+
+        return calibratedEproach;
+    };
 };
