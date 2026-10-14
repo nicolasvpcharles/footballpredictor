@@ -15,3 +15,7 @@ g++ main.cpp -o main
 ````
 
 then you should have a executable that you can launch
+
+
+## program shwocase
+<img href="readmepictures/screenCapture1.png">
