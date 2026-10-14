@@ -18,4 +18,5 @@ then you should have a executable that you can launch
 
 
 ## program shwocase
-<img href="readmepictures/screenCapture1.png">
+
+![programShowcase](/readmepictures/screenCapture1)
